@@ -2731,7 +2731,7 @@ Trả về JSON thuần (KHÔNG markdown, KHÔNG giải thích gì thêm):
 Chỉ gồm trận có kết quả mới hoặc đang live.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
+    const res = await fetch('/.netlify/functions/proxy',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
@@ -2890,7 +2890,7 @@ Trả về JSON thuần (KHÔNG markdown, KHÔNG giải thích):
 }`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/.netlify/functions/proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
