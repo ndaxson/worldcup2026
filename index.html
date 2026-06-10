@@ -71,6 +71,25 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
 .score-sub{font-size:10px;color:var(--dim);margin-top:2px;text-transform:uppercase}
 .score-penalty{font-size:11px;color:var(--accent);font-weight:600;margin-top:1px}
 #no-results{display:none;text-align:center;padding:40px;color:var(--dim)}
+.card-odds{display:none;border-top:1px solid var(--border);padding:7px 12px 8px;background:#0d1525}
+.card-odds.show{display:block}
+.odds-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.odds-row:last-child{margin-bottom:0}
+.odds-label{font-size:10px;color:var(--dim);font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;width:52px;flex-shrink:0}
+.odds-items{display:flex;gap:5px;flex-wrap:wrap}
+.odds-chip{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:3px 8px;border-radius:5px;line-height:1.2}
+.odds-win{background:#1a3a1a;color:#4ade80;border:1px solid #1e4a1e}
+.odds-draw{background:#2a2a1a;color:#fbbf24;border:1px solid #3a3a1e}
+.odds-lose{background:#3a1a1a;color:#f87171;border:1px solid #4a1e1e}
+.odds-hcap{background:#1a2d4a;color:#60a5fa;border:1px solid #1e3a5c}
+.odds-note{font-size:10px;color:var(--dim);margin-top:3px;font-style:italic}
+.btn-odds{background:linear-gradient(135deg,#1a3a5c,#0f2a42);color:#60a5fa;border:1px solid #1e3a5c;padding:8px 14px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;min-height:40px;letter-spacing:.3px;white-space:nowrap}
+.btn-odds:active{opacity:.75}
+.btn-odds:disabled{opacity:.45}
+.btn-odds .sp2{display:none;width:12px;height:12px;border:2px solid rgba(96,165,250,.3);border-top-color:#60a5fa;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.btn-odds.loading .sp2{display:inline-block}
+.btn-odds.loading .bi2{display:none}
+.header-controls{display:flex;align-items:center;gap:8px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -89,6 +108,12 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
   </div>
   <div class="header-row2">
     <span class="last-updated" id="last-updated">Chưa cập nhật</span>
+  </div>
+  <div class="header-controls">
+    <button class="btn-odds" id="btn-odds" onclick="updateOdds()">
+      <span class="bi2">📊</span><span class="sp2"></span> Cập nhật kèo
+    </button>
+    <span class="last-updated" id="last-odds">Kèo: chưa cập nhật</span>
   </div>
 </div>
 
@@ -160,6 +185,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Czechia</span>
     </div>
   </div>
+  <div class="card-odds" id="m1-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -207,6 +233,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Paraguay</span>
     </div>
   </div>
+  <div class="card-odds" id="m2-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -294,6 +321,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Türkiye</span>
     </div>
   </div>
+  <div class="card-odds" id="m3-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -381,6 +409,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Tunisia</span>
     </div>
   </div>
+  <div class="card-odds" id="m4-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -468,6 +497,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">New Zealand</span>
     </div>
   </div>
+  <div class="card-odds" id="m5-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -555,6 +585,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Jordan</span>
     </div>
   </div>
+  <div class="card-odds" id="m6-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -642,6 +673,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Colombia</span>
     </div>
   </div>
+  <div class="card-odds" id="m7-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -729,6 +761,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">South Korea</span>
     </div>
   </div>
+  <div class="card-odds" id="m8-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -816,6 +849,7 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Paraguay</span>
     </div>
   </div>
+  <div class="card-odds" id="m9-odds"></div>
 </div>
 </div>
 <div class="day-section" data-stage="group">
@@ -903,7 +937,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Japan</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m10-odds"></div>
+
+  <div class="card-odds" id="m36-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -930,7 +966,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Saudi Arabia</span>
     </div>
   </div>
-</div><div class="match-card" id="m38" data-id="38" data-stage="group" data-ts="1782068400000">
+
+  <div class="card-odds" id="m37-odds"></div></div><div class="match-card" id="m38" data-id="38" data-stage="group" data-ts="1782068400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng G</span>
     <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -950,7 +987,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Iran</span>
     </div>
   </div>
-</div><div class="match-card" id="m39" data-id="39" data-stage="group" data-ts="1782079200000">
+
+  <div class="card-odds" id="m38-odds"></div></div><div class="match-card" id="m39" data-id="39" data-stage="group" data-ts="1782079200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng H</span>
     <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -970,7 +1008,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Cape Verde</span>
     </div>
   </div>
-</div><div class="match-card" id="m40" data-id="40" data-stage="group" data-ts="1782090000000">
+
+  <div class="card-odds" id="m39-odds"></div></div><div class="match-card" id="m40" data-id="40" data-stage="group" data-ts="1782090000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng G</span>
     <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -990,7 +1029,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Egypt</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m11-odds"></div>
+
+  <div class="card-odds" id="m40-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -1017,7 +1058,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Austria</span>
     </div>
   </div>
-</div><div class="match-card" id="m42" data-id="42" data-stage="group" data-ts="1782162000000">
+
+  <div class="card-odds" id="m41-odds"></div></div><div class="match-card" id="m42" data-id="42" data-stage="group" data-ts="1782162000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng I</span>
     <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1037,7 +1079,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Iraq</span>
     </div>
   </div>
-</div><div class="match-card" id="m43" data-id="43" data-stage="group" data-ts="1782172800000">
+
+  <div class="card-odds" id="m42-odds"></div></div><div class="match-card" id="m43" data-id="43" data-stage="group" data-ts="1782172800000">
   <div class="card-top">
     <span class="match-group-tag">Bảng I</span>
     <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1057,7 +1100,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Senegal</span>
     </div>
   </div>
-</div><div class="match-card" id="m44" data-id="44" data-stage="group" data-ts="1782183600000">
+
+  <div class="card-odds" id="m43-odds"></div></div><div class="match-card" id="m44" data-id="44" data-stage="group" data-ts="1782183600000">
   <div class="card-top">
     <span class="match-group-tag">Bảng J</span>
     <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1077,7 +1121,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Algeria</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m12-odds"></div>
+
+  <div class="card-odds" id="m44-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -1104,7 +1150,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Uzbekistan</span>
     </div>
   </div>
-</div><div class="match-card" id="m46" data-id="46" data-stage="group" data-ts="1782244800000">
+
+  <div class="card-odds" id="m45-odds"></div></div><div class="match-card" id="m46" data-id="46" data-stage="group" data-ts="1782244800000">
   <div class="card-top">
     <span class="match-group-tag">Bảng L</span>
     <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1124,7 +1171,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Ghana</span>
     </div>
   </div>
-</div><div class="match-card" id="m47" data-id="47" data-stage="group" data-ts="1782255600000">
+
+  <div class="card-odds" id="m46-odds"></div></div><div class="match-card" id="m47" data-id="47" data-stage="group" data-ts="1782255600000">
   <div class="card-top">
     <span class="match-group-tag">Bảng L</span>
     <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1144,7 +1192,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Croatia</span>
     </div>
   </div>
-</div><div class="match-card" id="m48" data-id="48" data-stage="group" data-ts="1782266400000">
+
+  <div class="card-odds" id="m47-odds"></div></div><div class="match-card" id="m48" data-id="48" data-stage="group" data-ts="1782266400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng K</span>
     <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1164,7 +1213,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">DR Congo</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m13-odds"></div>
+
+  <div class="card-odds" id="m48-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -1191,7 +1242,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Canada</span>
     </div>
   </div>
-</div><div class="match-card" id="m50" data-id="50" data-stage="group" data-ts="1782327600000">
+
+  <div class="card-odds" id="m49-odds"></div></div><div class="match-card" id="m50" data-id="50" data-stage="group" data-ts="1782327600000">
   <div class="card-top">
     <span class="match-group-tag">Bảng B</span>
     <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1211,7 +1263,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Qatar</span>
     </div>
   </div>
-</div><div class="match-card" id="m51" data-id="51" data-stage="group" data-ts="1782338400000">
+
+  <div class="card-odds" id="m50-odds"></div></div><div class="match-card" id="m51" data-id="51" data-stage="group" data-ts="1782338400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng C</span>
     <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1231,7 +1284,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Brazil</span>
     </div>
   </div>
-</div><div class="match-card" id="m52" data-id="52" data-stage="group" data-ts="1782338400000">
+
+  <div class="card-odds" id="m51-odds"></div></div><div class="match-card" id="m52" data-id="52" data-stage="group" data-ts="1782338400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng C</span>
     <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1251,7 +1305,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Haiti</span>
     </div>
   </div>
-</div><div class="match-card" id="m53" data-id="53" data-stage="group" data-ts="1782349200000">
+
+  <div class="card-odds" id="m52-odds"></div></div><div class="match-card" id="m53" data-id="53" data-stage="group" data-ts="1782349200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng A</span>
     <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1271,7 +1326,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Mexico</span>
     </div>
   </div>
-</div><div class="match-card" id="m54" data-id="54" data-stage="group" data-ts="1782349200000">
+
+  <div class="card-odds" id="m53-odds"></div></div><div class="match-card" id="m54" data-id="54" data-stage="group" data-ts="1782349200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng A</span>
     <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1291,7 +1347,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">South Korea</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m14-odds"></div>
+
+  <div class="card-odds" id="m54-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -1318,7 +1376,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Ivory Coast</span>
     </div>
   </div>
-</div><div class="match-card" id="m56" data-id="56" data-stage="group" data-ts="1782417600000">
+
+  <div class="card-odds" id="m55-odds"></div></div><div class="match-card" id="m56" data-id="56" data-stage="group" data-ts="1782417600000">
   <div class="card-top">
     <span class="match-group-tag">Bảng E</span>
     <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1338,7 +1397,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Germany</span>
     </div>
   </div>
-</div><div class="match-card" id="m57" data-id="57" data-stage="group" data-ts="1782428400000">
+
+  <div class="card-odds" id="m56-odds"></div></div><div class="match-card" id="m57" data-id="57" data-stage="group" data-ts="1782428400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng F</span>
     <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1358,7 +1418,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Sweden</span>
     </div>
   </div>
-</div><div class="match-card" id="m58" data-id="58" data-stage="group" data-ts="1782428400000">
+
+  <div class="card-odds" id="m57-odds"></div></div><div class="match-card" id="m58" data-id="58" data-stage="group" data-ts="1782428400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng F</span>
     <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1378,7 +1439,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Netherlands</span>
     </div>
   </div>
-</div><div class="match-card" id="m59" data-id="59" data-stage="group" data-ts="1782439200000">
+
+  <div class="card-odds" id="m58-odds"></div></div><div class="match-card" id="m59" data-id="59" data-stage="group" data-ts="1782439200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng D</span>
     <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1398,7 +1460,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">USA</span>
     </div>
   </div>
-</div><div class="match-card" id="m60" data-id="60" data-stage="group" data-ts="1782439200000">
+
+  <div class="card-odds" id="m59-odds"></div></div><div class="match-card" id="m60" data-id="60" data-stage="group" data-ts="1782439200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng D</span>
     <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1418,7 +1481,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Australia</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m15-odds"></div>
+
+  <div class="card-odds" id="m60-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -1445,7 +1510,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">France</span>
     </div>
   </div>
-</div><div class="match-card" id="m62" data-id="62" data-stage="group" data-ts="1782500400000">
+
+  <div class="card-odds" id="m61-odds"></div></div><div class="match-card" id="m62" data-id="62" data-stage="group" data-ts="1782500400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng I</span>
     <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1465,7 +1531,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Iraq</span>
     </div>
   </div>
-</div><div class="match-card" id="m63" data-id="63" data-stage="group" data-ts="1782518400000">
+
+  <div class="card-odds" id="m62-odds"></div></div><div class="match-card" id="m63" data-id="63" data-stage="group" data-ts="1782518400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng H</span>
     <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1485,7 +1552,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Saudi Arabia</span>
     </div>
   </div>
-</div><div class="match-card" id="m64" data-id="64" data-stage="group" data-ts="1782518400000">
+
+  <div class="card-odds" id="m63-odds"></div></div><div class="match-card" id="m64" data-id="64" data-stage="group" data-ts="1782518400000">
   <div class="card-top">
     <span class="match-group-tag">Bảng H</span>
     <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1505,7 +1573,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Spain</span>
     </div>
   </div>
-</div><div class="match-card" id="m65" data-id="65" data-stage="group" data-ts="1782529200000">
+
+  <div class="card-odds" id="m64-odds"></div></div><div class="match-card" id="m65" data-id="65" data-stage="group" data-ts="1782529200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng G</span>
     <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1525,7 +1594,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Iran</span>
     </div>
   </div>
-</div><div class="match-card" id="m66" data-id="66" data-stage="group" data-ts="1782529200000">
+
+  <div class="card-odds" id="m65-odds"></div></div><div class="match-card" id="m66" data-id="66" data-stage="group" data-ts="1782529200000">
   <div class="card-top">
     <span class="match-group-tag">Bảng G</span>
     <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1545,7 +1615,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Belgium</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m16-odds"></div>
+
+  <div class="card-odds" id="m66-odds"></div></div>
 </div>
 <div class="day-section" data-stage="group">
 <div class="day-header">
@@ -1572,7 +1644,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">England</span>
     </div>
   </div>
-</div><div class="match-card" id="m68" data-id="68" data-stage="group" data-ts="1782594000000">
+
+  <div class="card-odds" id="m67-odds"></div></div><div class="match-card" id="m68" data-id="68" data-stage="group" data-ts="1782594000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng L</span>
     <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1592,7 +1665,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Ghana</span>
     </div>
   </div>
-</div><div class="match-card" id="m69" data-id="69" data-stage="group" data-ts="1782603000000">
+
+  <div class="card-odds" id="m68-odds"></div></div><div class="match-card" id="m69" data-id="69" data-stage="group" data-ts="1782603000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng K</span>
     <div class="card-time"><span class="time-val">09:30</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1612,7 +1686,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Portugal</span>
     </div>
   </div>
-</div><div class="match-card" id="m70" data-id="70" data-stage="group" data-ts="1782603000000">
+
+  <div class="card-odds" id="m69-odds"></div></div><div class="match-card" id="m70" data-id="70" data-stage="group" data-ts="1782603000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng K</span>
     <div class="card-time"><span class="time-val">09:30</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1632,7 +1707,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Uzbekistan</span>
     </div>
   </div>
-</div><div class="match-card" id="m71" data-id="71" data-stage="group" data-ts="1782612000000">
+
+  <div class="card-odds" id="m70-odds"></div></div><div class="match-card" id="m71" data-id="71" data-stage="group" data-ts="1782612000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng J</span>
     <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1652,7 +1728,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Austria</span>
     </div>
   </div>
-</div><div class="match-card" id="m72" data-id="72" data-stage="group" data-ts="1782612000000">
+
+  <div class="card-odds" id="m71-odds"></div></div><div class="match-card" id="m72" data-id="72" data-stage="group" data-ts="1782612000000">
   <div class="card-top">
     <span class="match-group-tag">Bảng J</span>
     <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1672,7 +1749,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Argentina</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m17-odds"></div>
+
+  <div class="card-odds" id="m72-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r32">
 <div class="day-header">
@@ -1699,7 +1778,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up B</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m18-odds"></div>
+
+  <div class="card-odds" id="m73-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r32">
 <div class="day-header">
@@ -1726,7 +1807,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div><div class="match-card" id="m75" data-id="75" data-stage="r32" data-ts="1782781200000">
+
+  <div class="card-odds" id="m74-odds"></div></div><div class="match-card" id="m75" data-id="75" data-stage="r32" data-ts="1782781200000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 75</span>
     <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1746,7 +1828,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up C</span>
     </div>
   </div>
-</div><div class="match-card" id="m76" data-id="76" data-stage="r32" data-ts="1782752400000">
+
+  <div class="card-odds" id="m75-odds"></div></div><div class="match-card" id="m76" data-id="76" data-stage="r32" data-ts="1782752400000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 76</span>
     <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1766,7 +1849,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up F</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m19-odds"></div>
+
+  <div class="card-odds" id="m76-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r32">
 <div class="day-header">
@@ -1793,7 +1878,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div><div class="match-card" id="m78" data-id="78" data-stage="r32" data-ts="1782838800000">
+
+  <div class="card-odds" id="m77-odds"></div></div><div class="match-card" id="m78" data-id="78" data-stage="r32" data-ts="1782838800000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 78</span>
     <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1813,7 +1899,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up I</span>
     </div>
   </div>
-</div><div class="match-card" id="m79" data-id="79" data-stage="r32" data-ts="1782867600000">
+
+  <div class="card-odds" id="m78-odds"></div></div><div class="match-card" id="m79" data-id="79" data-stage="r32" data-ts="1782867600000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 79</span>
     <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1833,7 +1920,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m20-odds"></div>
+
+  <div class="card-odds" id="m79-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r32">
 <div class="day-header">
@@ -1860,7 +1949,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div><div class="match-card" id="m81" data-id="81" data-stage="r32" data-ts="1782950400000">
+
+  <div class="card-odds" id="m80-odds"></div></div><div class="match-card" id="m81" data-id="81" data-stage="r32" data-ts="1782950400000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 81</span>
     <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1880,7 +1970,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div><div class="match-card" id="m82" data-id="82" data-stage="r32" data-ts="1782936000000">
+
+  <div class="card-odds" id="m81-odds"></div></div><div class="match-card" id="m82" data-id="82" data-stage="r32" data-ts="1782936000000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 82</span>
     <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1900,7 +1991,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m21-odds"></div>
+
+  <div class="card-odds" id="m82-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r32">
 <div class="day-header">
@@ -1927,7 +2020,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up L</span>
     </div>
   </div>
-</div><div class="match-card" id="m84" data-id="84" data-stage="r32" data-ts="1783018800000">
+
+  <div class="card-odds" id="m83-odds"></div></div><div class="match-card" id="m84" data-id="84" data-stage="r32" data-ts="1783018800000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 84</span>
     <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1947,7 +2041,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up J</span>
     </div>
   </div>
-</div><div class="match-card" id="m85" data-id="85" data-stage="r32" data-ts="1783047600000">
+
+  <div class="card-odds" id="m84-odds"></div></div><div class="match-card" id="m85" data-id="85" data-stage="r32" data-ts="1783047600000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 85</span>
     <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -1967,7 +2062,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m22-odds"></div>
+
+  <div class="card-odds" id="m85-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r32">
 <div class="day-header">
@@ -1994,7 +2091,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up H</span>
     </div>
   </div>
-</div><div class="match-card" id="m87" data-id="87" data-stage="r32" data-ts="1783128600000">
+
+  <div class="card-odds" id="m86-odds"></div></div><div class="match-card" id="m87" data-id="87" data-stage="r32" data-ts="1783128600000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 87</span>
     <div class="card-time"><span class="time-val">11:30</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2014,7 +2112,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Best 3rd</span>
     </div>
   </div>
-</div><div class="match-card" id="m88" data-id="88" data-stage="r32" data-ts="1783101600000">
+
+  <div class="card-odds" id="m87-odds"></div></div><div class="match-card" id="m88" data-id="88" data-stage="r32" data-ts="1783101600000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 88</span>
     <div class="card-time"><span class="time-val">04:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2034,7 +2133,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">R-up G</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m23-odds"></div>
+
+  <div class="card-odds" id="m88-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r16">
 <div class="day-header">
@@ -2061,7 +2162,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 77</span>
     </div>
   </div>
-</div><div class="match-card" id="m90" data-id="90" data-stage="r16" data-ts="1783184400000">
+
+  <div class="card-odds" id="m89-odds"></div></div><div class="match-card" id="m90" data-id="90" data-stage="r16" data-ts="1783184400000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 90</span>
     <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2081,7 +2183,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 75</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m24-odds"></div>
+
+  <div class="card-odds" id="m90-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r16">
 <div class="day-header">
@@ -2108,7 +2212,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 78</span>
     </div>
   </div>
-</div><div class="match-card" id="m92" data-id="92" data-stage="r16" data-ts="1783296000000">
+
+  <div class="card-odds" id="m91-odds"></div></div><div class="match-card" id="m92" data-id="92" data-stage="r16" data-ts="1783296000000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 92</span>
     <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2128,7 +2233,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 80</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m25-odds"></div>
+
+  <div class="card-odds" id="m92-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r16">
 <div class="day-header">
@@ -2155,7 +2262,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 84</span>
     </div>
   </div>
-</div><div class="match-card" id="m94" data-id="94" data-stage="r16" data-ts="1783382400000">
+
+  <div class="card-odds" id="m93-odds"></div></div><div class="match-card" id="m94" data-id="94" data-stage="r16" data-ts="1783382400000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 94</span>
     <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2175,7 +2283,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 82</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m26-odds"></div>
+
+  <div class="card-odds" id="m94-odds"></div></div>
 </div>
 <div class="day-section" data-stage="r16">
 <div class="day-header">
@@ -2202,7 +2312,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 88</span>
     </div>
   </div>
-</div><div class="match-card" id="m96" data-id="96" data-stage="r16" data-ts="1783454400000">
+
+  <div class="card-odds" id="m95-odds"></div></div><div class="match-card" id="m96" data-id="96" data-stage="r16" data-ts="1783454400000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 96</span>
     <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2222,7 +2333,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 87</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m27-odds"></div>
+
+  <div class="card-odds" id="m96-odds"></div></div>
 </div>
 <div class="day-section" data-stage="qf">
 <div class="day-header">
@@ -2249,7 +2362,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 90</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m28-odds"></div>
+
+  <div class="card-odds" id="m97-odds"></div></div>
 </div>
 <div class="day-section" data-stage="qf">
 <div class="day-header">
@@ -2276,7 +2391,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 94</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m29-odds"></div>
+
+  <div class="card-odds" id="m98-odds"></div></div>
 </div>
 <div class="day-section" data-stage="qf">
 <div class="day-header">
@@ -2303,7 +2420,8 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 92</span>
     </div>
   </div>
-</div><div class="match-card" id="m100" data-id="100" data-stage="qf" data-ts="1783818000000">
+
+  <div class="card-odds" id="m99-odds"></div></div><div class="match-card" id="m100" data-id="100" data-stage="qf" data-ts="1783818000000">
   <div class="card-top">
     <span class="match-group-tag">TĐ 100</span>
     <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
@@ -2323,7 +2441,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 96</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m30-odds"></div>
+
+  <div class="card-odds" id="m100-odds"></div></div>
 </div>
 <div class="day-section" data-stage="sf">
 <div class="day-header">
@@ -2350,7 +2470,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 98</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m31-odds"></div>
+
+  <div class="card-odds" id="m101-odds"></div></div>
 </div>
 <div class="day-section" data-stage="sf">
 <div class="day-header">
@@ -2377,7 +2499,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 100</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m32-odds"></div>
+
+  <div class="card-odds" id="m102-odds"></div></div>
 </div>
 <div class="day-section" data-stage="3p">
 <div class="day-header">
@@ -2404,7 +2528,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Lose 102</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m33-odds"></div>
+
+  <div class="card-odds" id="m103-odds"></div></div>
 </div>
 <div class="day-section" data-stage="final">
 <div class="day-header">
@@ -2431,8 +2557,11 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
       <span class="team-name">Win 102</span>
     </div>
   </div>
-</div>
+  <div class="card-odds" id="m34-odds"></div>
+
+  <div class="card-odds" id="m104-odds"></div></div>
 </div>  </div>
+  <div class="card-odds" id="m35-odds"></div>
 </div>
 
 <script>
@@ -2638,8 +2767,172 @@ Chỉ gồm trận có kết quả mới hoặc đang live.`;
   setTimeout(()=>bar.className='',8000);
 }
 
+
+// ── ODDS STORAGE ──
+const ODDS_KEY = 'wc2026_odds_v1';
+
+function loadOdds() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(ODDS_KEY) || '{}');
+    for (const [id, d] of Object.entries(saved)) {
+      applyOdds(parseInt(id), d.home1x2, d.draw1x2, d.away1x2, d.homeHcap, d.hcapLine, d.awayHcap, d.note);
+    }
+    if (Object.keys(saved).length > 0) {
+      const ts = saved._ts || '';
+      if (ts) document.getElementById('last-odds').textContent = 'Kèo: ' + ts;
+    }
+  } catch(e) {}
+}
+
+function saveOddsData(oddsMap, ts) {
+  try {
+    oddsMap._ts = ts;
+    localStorage.setItem(ODDS_KEY, JSON.stringify(oddsMap));
+  } catch(e) {}
+}
+
+function applyOdds(id, home1x2, draw1x2, away1x2, homeHcap, hcapLine, awayHcap, note) {
+  const box = document.getElementById('m'+id+'-odds');
+  if (!box) return;
+  if (!home1x2 && !homeHcap) { box.className = 'card-odds'; box.innerHTML = ''; return; }
+
+  let html = '';
+
+  // 1X2 row
+  if (home1x2 || draw1x2 || away1x2) {
+    const homeTeam = document.querySelector('#m'+id+'-home .team-name');
+    const awayTeam = document.querySelector('#m'+id+'-away .team-name');
+    const hName = homeTeam ? homeTeam.textContent : '1';
+    const aName = awayTeam ? awayTeam.textContent : '2';
+    html += `<div class="odds-row">
+      <span class="odds-label">1X2</span>
+      <div class="odds-items">
+        ${home1x2 ? `<span class="odds-chip odds-win" title="${hName}">${hName.substring(0,3)} ${home1x2}</span>` : ''}
+        ${draw1x2 ? `<span class="odds-chip odds-draw">Hoà ${draw1x2}</span>` : ''}
+        ${away1x2 ? `<span class="odds-chip odds-lose" title="${aName}">${aName.substring(0,3)} ${away1x2}</span>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // Handicap row
+  if (homeHcap || awayHcap) {
+    const hLine = hcapLine || '';
+    html += `<div class="odds-row">
+      <span class="odds-label">Châu Á</span>
+      <div class="odds-items">
+        ${homeHcap ? `<span class="odds-chip odds-hcap">${hLine} ${homeHcap}</span>` : ''}
+        ${awayHcap ? `<span class="odds-chip odds-hcap">${awayHcap}</span>` : ''}
+      </div>
+    </div>`;
+  }
+
+  if (note) {
+    html += `<div class="odds-note">* ${note}</div>`;
+  }
+
+  box.innerHTML = html;
+  box.className = 'card-odds show';
+}
+
+// ── UPDATE ODDS (AI) ──
+async function updateOdds() {
+  const btn = document.getElementById('btn-odds');
+  const bar = document.getElementById('status-bar');
+  btn.disabled = true; btn.classList.add('loading');
+  bar.className = 'show'; bar.textContent = '⏳ Đang tìm tỉ lệ kèo World Cup 2026...';
+
+  // Get upcoming matches (next 7 days)
+  const nowTs = Date.now();
+  const in7days = nowTs + 7 * 24 * 3600 * 1000;
+  const cards = document.querySelectorAll('.match-card');
+  const upcoming = [];
+  cards.forEach(c => {
+    const ts = parseInt(c.dataset.ts || '0');
+    if (ts >= nowTs - 3600000 && ts <= in7days) {
+      const id = c.dataset.id;
+      const homeName = c.querySelector('.team-name') ? c.querySelector('.team-name').textContent : '';
+      const awayName = c.querySelectorAll('.team-name')[1] ? c.querySelectorAll('.team-name')[1].textContent : '';
+      const timeEl = c.querySelector('.time-val');
+      const dayEl = c.closest('.day-section')?.querySelector('.day-date');
+      upcoming.push(`ID ${id}: ${homeName} vs ${awayName} — ${dayEl?.textContent||''} ${timeEl?.textContent||''} AEST`);
+    }
+  });
+
+  if (!upcoming.length) {
+    bar.className = 'show'; bar.textContent = 'ℹ️ Không có trận sắp diễn ra trong 7 ngày tới.';
+    btn.disabled = false; btn.classList.remove('loading');
+    setTimeout(() => bar.className = '', 5000); return;
+  }
+
+  const nowBne = new Date(nowTs);
+  const prompt = `Bạn là chuyên gia cá cược bóng đá. Hôm nay: ${nowBne.toLocaleDateString('vi-VN', {weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})} (Brisbane AEST UTC+10).
+
+Các trận FIFA World Cup 2026 sắp diễn ra cần tỉ lệ kèo:
+${upcoming.join('\n')}
+
+Hãy cung cấp tỉ lệ kèo mới nhất từ các nhà cái lớn (Bet365, William Hill, Unibet...).
+Trả về JSON thuần (KHÔNG markdown, KHÔNG giải thích):
+{
+  "odds": [
+    {
+      "id": <số ID>,
+      "home1x2": "<tỉ lệ thắng đội nhà, ví dụ '2.10'>",
+      "draw1x2": "<tỉ lệ hoà, ví dụ '3.20'>",
+      "away1x2": "<tỉ lệ thắng đội khách, ví dụ '3.50'>",
+      "homeHcap": "<tỉ lệ kèo châu á đội nhà, ví dụ '1.95'>",
+      "hcapLine": "<chấp, ví dụ '-0.5' hoặc '0' hoặc '+0.5'>",
+      "awayHcap": "<tỉ lệ kèo châu á đội khách, ví dụ '1.95'>",
+      "note": "<ghi chú ngắn nếu cần, hoặc null>"
+    }
+  ],
+  "source": "<nguồn tham khảo>",
+  "warning": "<cảnh báo nếu số liệu không chắc chắn>"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = (data.content || []).map(c => c.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+
+    const oddsMap = {};
+    let count = 0;
+    for (const o of (result.odds || [])) {
+      applyOdds(o.id, o.home1x2, o.draw1x2, o.away1x2, o.homeHcap, o.hcapLine, o.awayHcap, o.note);
+      oddsMap[o.id] = { home1x2:o.home1x2, draw1x2:o.draw1x2, away1x2:o.away1x2,
+        homeHcap:o.homeHcap, hcapLine:o.hcapLine, awayHcap:o.awayHcap, note:o.note };
+      count++;
+    }
+
+    const ts = new Date().toLocaleTimeString('vi-VN');
+    saveOddsData(oddsMap, ts);
+    document.getElementById('last-odds').textContent = 'Kèo: ' + ts;
+
+    const warn = result.warning ? ` ⚠️ ${result.warning}` : '';
+    const src = result.source ? ` (${result.source})` : '';
+    bar.className = 'show ok';
+    bar.textContent = `📊 Cập nhật kèo ${count} trận.${src}${warn}`;
+
+  } catch(err) {
+    bar.className = 'show err';
+    bar.textContent = '❌ Lỗi cập nhật kèo: ' + err.message;
+  } finally {
+    btn.disabled = false; btn.classList.remove('loading');
+  }
+  setTimeout(() => bar.className = '', 10000);
+}
+
 // ── INIT ──
 loadScores();
+loadOdds();
 
 // Scroll to today on load
 (function scrollToToday(){
