@@ -1,0 +1,2661 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>World Cup 2026 — Brisbane</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--border:#1e2d42;--accent:#f5a623;--accent2:#e8572a;--green:#22c55e;--red:#ef4444;--text:#e2e8f0;--dim:#64748b;--muted:#94a3b8;--live:#22c55e}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden}
+.header{background:linear-gradient(160deg,#0f1e3a,#1a0a2e);border-bottom:2px solid var(--accent);padding:12px 16px 10px;padding-top:calc(12px + env(safe-area-inset-top,0px));position:sticky;top:0;z-index:100}
+.header-row1{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.header-left{display:flex;align-items:center;gap:8px}
+.trophy-icon{font-size:26px;line-height:1}
+.title-text h1{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--accent);line-height:1;letter-spacing:.5px;text-transform:uppercase}
+.title-text p{font-size:10px;color:var(--muted);margin-top:1px}
+.btn-update{background:linear-gradient(135deg,var(--accent2),#c0392b);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;min-height:44px;letter-spacing:.5px}
+.btn-update:active{opacity:.75}
+.btn-update:disabled{opacity:.45}
+.btn-update .sp{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.btn-update.loading .sp{display:inline-block}
+.btn-update.loading .bi{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.header-row2{display:flex;align-items:center;margin-top:6px}
+.last-updated{font-size:10px;color:var(--dim)}
+.filters-wrap{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:70px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filters-wrap::-webkit-scrollbar{display:none}
+.filters{display:flex;gap:6px;padding:8px 12px;width:max-content}
+.filter-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:20px;font-size:13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;cursor:pointer;white-space:nowrap;min-height:36px;letter-spacing:.3px}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.main{padding:12px 12px calc(16px + env(safe-area-inset-bottom,0px));max-width:700px;margin:0 auto}
+#status-bar{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--muted);align-items:flex-start;gap:6px;line-height:1.4}
+#status-bar.show{display:flex}
+#status-bar.ok{border-color:var(--green);color:var(--green)}
+#status-bar.err{border-color:var(--red);color:var(--red)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:10px 0 8px;margin-bottom:12px;border-bottom:1px solid var(--border)}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.day-section{margin-bottom:20px}
+.day-section.hidden{display:none}
+.day-header{display:flex;align-items:center;gap:8px;padding:8px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.day-date{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:var(--accent);text-transform:uppercase;letter-spacing:.5px}
+.stage-badge{font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;margin-left:auto}
+.stage-group{background:#1a3a5c;color:#60a5fa}.stage-r32{background:#2d1f3a;color:#c084fc}
+.stage-r16{background:#1a2d1a;color:#4ade80}.stage-qf{background:#3a2a0a;color:#fbbf24}
+.stage-sf{background:#3a1a0a;color:#fb923c}.stage-f{background:#3a0a0a;color:#f87171}
+.stage-3p{background:#1a1a3a;color:#818cf8}
+.match-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.match-card.hidden{display:none}
+.match-card.has-result{border-left:3px solid var(--accent)}
+.match-card.live-now{border-left:3px solid var(--live);background:#0e1e12;animation:pb 2s infinite}
+@keyframes pb{0%,100%{border-left-color:var(--live)}50%{border-left-color:#16a34a}}
+.card-top{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 0;gap:8px}
+.match-group-tag{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;color:#60a5fa;background:#1a2d4a;border:1px solid #1e3a5c;padding:1px 7px;border-radius:4px;text-transform:uppercase}
+.card-time{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--accent);line-height:1}
+.card-time .live-badge{display:none;font-size:12px;color:var(--live);font-weight:700}
+.match-card.live-now .time-val{display:none}
+.match-card.live-now .live-badge{display:inline}
+.venue-tip{font-size:10px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;text-align:right}
+.card-match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:8px 12px 10px;gap:8px}
+.team{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.team-flag{font-size:28px;line-height:1}
+.team-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--text);text-align:center;line-height:1.2;word-break:break-word}
+.team.winner .team-name{color:var(--green)}
+.team.loser .team-name{color:var(--dim)}
+.score-box{text-align:center;min-width:64px}
+.score-display{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:#fff;line-height:1;letter-spacing:2px}
+.score-display.no-score{font-size:20px;color:var(--dim);letter-spacing:1px}
+.score-sub{font-size:10px;color:var(--dim);margin-top:2px;text-transform:uppercase}
+.score-penalty{font-size:11px;color:var(--accent);font-weight:600;margin-top:1px}
+#no-results{display:none;text-align:center;padding:40px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-row1">
+    <div class="header-left">
+      <span class="trophy-icon">🏆</span>
+      <div class="title-text">
+        <h1>World Cup 2026</h1>
+        <p>Giờ Brisbane AEST (UTC+10) &nbsp;•&nbsp; 11/6 – 19/7/2026</p>
+      </div>
+    </div>
+    <button class="btn-update" id="btn-update" onclick="updateScores()">
+      <span class="bi">🔄</span><span class="sp"></span> Cập nhật
+    </button>
+  </div>
+  <div class="header-row2">
+    <span class="last-updated" id="last-updated">Chưa cập nhật</span>
+  </div>
+</div>
+
+<div class="filters-wrap">
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterStage('all',this)">Tất cả</button>
+    <button class="filter-btn" onclick="filterStage('today',this)">📅 Hôm nay</button>
+    <button class="filter-btn" onclick="filterStage('group',this)">Vòng bảng</button>
+    <button class="filter-btn" onclick="filterStage('r32',this)">Vòng 32</button>
+    <button class="filter-btn" onclick="filterStage('r16',this)">Vòng 16</button>
+    <button class="filter-btn" onclick="filterStage('qf',this)">Tứ kết</button>
+    <button class="filter-btn" onclick="filterStage('sf',this)">Bán kết</button>
+    <button class="filter-btn" onclick="filterStage('final',this)">Chung kết</button>
+  </div>
+</div>
+
+<div class="main">
+  <div id="status-bar"></div>
+  <div class="legend">
+    <div class="legend-item"><div class="dot" style="background:var(--green)"></div>Thắng</div>
+    <div class="legend-item"><div class="dot" style="background:var(--dim)"></div>Hoà</div>
+    <div class="legend-item"><div class="dot" style="background:var(--live)"></div>Live</div>
+    <div class="legend-item"><div class="dot" style="background:var(--accent)"></div>Có kết quả</div>
+  </div>
+  <div id="no-results">Không có trận nào.</div>
+  <div id="schedule-container">
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T6 12/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m1" data-id="1" data-stage="group" data-ts="1781204400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng A</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Azteca</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m1-home">
+      <span class="team-flag">🇲🇽</span>
+      <span class="team-name">Mexico</span>
+    </div>
+    <div class="score-box" id="m1-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m1-away">
+      <span class="team-flag">🇿🇦</span>
+      <span class="team-name">South Africa</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m2" data-id="2" data-stage="group" data-ts="1781229600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng A</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Akron</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m2-home">
+      <span class="team-flag">🇰🇷</span>
+      <span class="team-name">South Korea</span>
+    </div>
+    <div class="score-box" id="m2-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m2-away">
+      <span class="team-flag">🇨🇿</span>
+      <span class="team-name">Czechia</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T7 13/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m3" data-id="3" data-stage="group" data-ts="1781290800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng B</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BMO Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m3-home">
+      <span class="team-flag">🇨🇦</span>
+      <span class="team-name">Canada</span>
+    </div>
+    <div class="score-box" id="m3-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m3-away">
+      <span class="team-flag">🇧🇦</span>
+      <span class="team-name">Bosnia & Herzegovina</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m4" data-id="4" data-stage="group" data-ts="1781312400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng D</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m4-home">
+      <span class="team-flag">🇺🇸</span>
+      <span class="team-name">USA</span>
+    </div>
+    <div class="score-box" id="m4-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m4-away">
+      <span class="team-flag">🇵🇾</span>
+      <span class="team-name">Paraguay</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">CN 14/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m5" data-id="5" data-stage="group" data-ts="1781377200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng B</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Levi's Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m5-home">
+      <span class="team-flag">🇶🇦</span>
+      <span class="team-name">Qatar</span>
+    </div>
+    <div class="score-box" id="m5-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m5-away">
+      <span class="team-flag">🇨🇭</span>
+      <span class="team-name">Switzerland</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m6" data-id="6" data-stage="group" data-ts="1781388000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng C</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m6-home">
+      <span class="team-flag">🇧🇷</span>
+      <span class="team-name">Brazil</span>
+    </div>
+    <div class="score-box" id="m6-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m6-away">
+      <span class="team-flag">🇲🇦</span>
+      <span class="team-name">Morocco</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m7" data-id="7" data-stage="group" data-ts="1781398800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng C</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m7-home">
+      <span class="team-flag">🇭🇹</span>
+      <span class="team-name">Haiti</span>
+    </div>
+    <div class="score-box" id="m7-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m7-away">
+      <span class="team-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+      <span class="team-name">Scotland</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m8" data-id="8" data-stage="group" data-ts="1781409600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng D</span>
+    <div class="card-time"><span class="time-val">14:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m8-home">
+      <span class="team-flag">🇦🇺</span>
+      <span class="team-name">Australia</span>
+    </div>
+    <div class="score-box" id="m8-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">14:00 AEST</div>
+    </div>
+    <div class="team" id="m8-away">
+      <span class="team-flag">🇹🇷</span>
+      <span class="team-name">Türkiye</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T2 15/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m9" data-id="9" data-stage="group" data-ts="1781456400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng E</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m9-home">
+      <span class="team-flag">🇩🇪</span>
+      <span class="team-name">Germany</span>
+    </div>
+    <div class="score-box" id="m9-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m9-away">
+      <span class="team-flag">🇨🇼</span>
+      <span class="team-name">Curaçao</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m10" data-id="10" data-stage="group" data-ts="1781467200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng F</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m10-home">
+      <span class="team-flag">🇳🇱</span>
+      <span class="team-name">Netherlands</span>
+    </div>
+    <div class="score-box" id="m10-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m10-away">
+      <span class="team-flag">🇯🇵</span>
+      <span class="team-name">Japan</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m11" data-id="11" data-stage="group" data-ts="1781478000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng E</span>
+    <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lincoln Financial Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m11-home">
+      <span class="team-flag">🇨🇮</span>
+      <span class="team-name">Ivory Coast</span>
+    </div>
+    <div class="score-box" id="m11-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:00 AEST</div>
+    </div>
+    <div class="team" id="m11-away">
+      <span class="team-flag">🇪🇨</span>
+      <span class="team-name">Ecuador</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m12" data-id="12" data-stage="group" data-ts="1781488800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng F</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio BBVA</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m12-home">
+      <span class="team-flag">🇸🇪</span>
+      <span class="team-name">Sweden</span>
+    </div>
+    <div class="score-box" id="m12-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m12-away">
+      <span class="team-flag">🇹🇳</span>
+      <span class="team-name">Tunisia</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T3 16/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m13" data-id="13" data-stage="group" data-ts="1781539200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng H</span>
+    <div class="card-time"><span class="time-val">02:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m13-home">
+      <span class="team-flag">🇪🇸</span>
+      <span class="team-name">Spain</span>
+    </div>
+    <div class="score-box" id="m13-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">02:00 AEST</div>
+    </div>
+    <div class="team" id="m13-away">
+      <span class="team-flag">🇨🇻</span>
+      <span class="team-name">Cape Verde</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m14" data-id="14" data-stage="group" data-ts="1781550000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng G</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lumen Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m14-home">
+      <span class="team-flag">🇧🇪</span>
+      <span class="team-name">Belgium</span>
+    </div>
+    <div class="score-box" id="m14-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m14-away">
+      <span class="team-flag">🇪🇬</span>
+      <span class="team-name">Egypt</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m15" data-id="15" data-stage="group" data-ts="1781560800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng H</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m15-home">
+      <span class="team-flag">🇸🇦</span>
+      <span class="team-name">Saudi Arabia</span>
+    </div>
+    <div class="score-box" id="m15-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m15-away">
+      <span class="team-flag">🇺🇾</span>
+      <span class="team-name">Uruguay</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m16" data-id="16" data-stage="group" data-ts="1781571600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng G</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m16-home">
+      <span class="team-flag">🇮🇷</span>
+      <span class="team-name">Iran</span>
+    </div>
+    <div class="score-box" id="m16-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m16-away">
+      <span class="team-flag">🇳🇿</span>
+      <span class="team-name">New Zealand</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T4 17/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m17" data-id="17" data-stage="group" data-ts="1781636400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng I</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m17-home">
+      <span class="team-flag">🇫🇷</span>
+      <span class="team-name">France</span>
+    </div>
+    <div class="score-box" id="m17-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m17-away">
+      <span class="team-flag">🇸🇳</span>
+      <span class="team-name">Senegal</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m18" data-id="18" data-stage="group" data-ts="1781647200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng I</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m18-home">
+      <span class="team-flag">🇮🇶</span>
+      <span class="team-name">Iraq</span>
+    </div>
+    <div class="score-box" id="m18-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m18-away">
+      <span class="team-flag">🇳🇴</span>
+      <span class="team-name">Norway</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m19" data-id="19" data-stage="group" data-ts="1781658000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng J</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Arrowhead Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m19-home">
+      <span class="team-flag">🇦🇷</span>
+      <span class="team-name">Argentina</span>
+    </div>
+    <div class="score-box" id="m19-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m19-away">
+      <span class="team-flag">🇩🇿</span>
+      <span class="team-name">Algeria</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m20" data-id="20" data-stage="group" data-ts="1781668800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng J</span>
+    <div class="card-time"><span class="time-val">14:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Levi's Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m20-home">
+      <span class="team-flag">🇦🇹</span>
+      <span class="team-name">Austria</span>
+    </div>
+    <div class="score-box" id="m20-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">14:00 AEST</div>
+    </div>
+    <div class="team" id="m20-away">
+      <span class="team-flag">🇯🇴</span>
+      <span class="team-name">Jordan</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T5 18/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m21" data-id="21" data-stage="group" data-ts="1781715600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng K</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m21-home">
+      <span class="team-flag">🇵🇹</span>
+      <span class="team-name">Portugal</span>
+    </div>
+    <div class="score-box" id="m21-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m21-away">
+      <span class="team-flag">🇨🇩</span>
+      <span class="team-name">DR Congo</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m22" data-id="22" data-stage="group" data-ts="1781726400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng L</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m22-home">
+      <span class="team-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+      <span class="team-name">England</span>
+    </div>
+    <div class="score-box" id="m22-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m22-away">
+      <span class="team-flag">🇭🇷</span>
+      <span class="team-name">Croatia</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m23" data-id="23" data-stage="group" data-ts="1781737200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng L</span>
+    <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BMO Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m23-home">
+      <span class="team-flag">🇬🇭</span>
+      <span class="team-name">Ghana</span>
+    </div>
+    <div class="score-box" id="m23-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:00 AEST</div>
+    </div>
+    <div class="team" id="m23-away">
+      <span class="team-flag">🇵🇦</span>
+      <span class="team-name">Panama</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m24" data-id="24" data-stage="group" data-ts="1781748000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng K</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Azteca</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m24-home">
+      <span class="team-flag">🇺🇿</span>
+      <span class="team-name">Uzbekistan</span>
+    </div>
+    <div class="score-box" id="m24-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m24-away">
+      <span class="team-flag">🇨🇴</span>
+      <span class="team-name">Colombia</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T6 19/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m25" data-id="25" data-stage="group" data-ts="1781798400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng A</span>
+    <div class="card-time"><span class="time-val">02:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m25-home">
+      <span class="team-flag">🇨🇿</span>
+      <span class="team-name">Czechia</span>
+    </div>
+    <div class="score-box" id="m25-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">02:00 AEST</div>
+    </div>
+    <div class="team" id="m25-away">
+      <span class="team-flag">🇿🇦</span>
+      <span class="team-name">South Africa</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m26" data-id="26" data-stage="group" data-ts="1781809200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng B</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m26-home">
+      <span class="team-flag">🇨🇭</span>
+      <span class="team-name">Switzerland</span>
+    </div>
+    <div class="score-box" id="m26-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m26-away">
+      <span class="team-flag">🇧🇦</span>
+      <span class="team-name">Bosnia & Herzegovina</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m27" data-id="27" data-stage="group" data-ts="1781820000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng B</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m27-home">
+      <span class="team-flag">🇨🇦</span>
+      <span class="team-name">Canada</span>
+    </div>
+    <div class="score-box" id="m27-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m27-away">
+      <span class="team-flag">🇶🇦</span>
+      <span class="team-name">Qatar</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m28" data-id="28" data-stage="group" data-ts="1781830800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng A</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Akron</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m28-home">
+      <span class="team-flag">🇲🇽</span>
+      <span class="team-name">Mexico</span>
+    </div>
+    <div class="score-box" id="m28-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m28-away">
+      <span class="team-flag">🇰🇷</span>
+      <span class="team-name">South Korea</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T7 20/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m29" data-id="29" data-stage="group" data-ts="1781895600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng D</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lumen Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m29-home">
+      <span class="team-flag">🇺🇸</span>
+      <span class="team-name">USA</span>
+    </div>
+    <div class="score-box" id="m29-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m29-away">
+      <span class="team-flag">🇦🇺</span>
+      <span class="team-name">Australia</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m30" data-id="30" data-stage="group" data-ts="1781906400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng C</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m30-home">
+      <span class="team-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+      <span class="team-name">Scotland</span>
+    </div>
+    <div class="score-box" id="m30-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m30-away">
+      <span class="team-flag">🇲🇦</span>
+      <span class="team-name">Morocco</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m31" data-id="31" data-stage="group" data-ts="1781915400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng C</span>
+    <div class="card-time"><span class="time-val">10:30</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lincoln Financial Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m31-home">
+      <span class="team-flag">🇧🇷</span>
+      <span class="team-name">Brazil</span>
+    </div>
+    <div class="score-box" id="m31-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:30 AEST</div>
+    </div>
+    <div class="team" id="m31-away">
+      <span class="team-flag">🇭🇹</span>
+      <span class="team-name">Haiti</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m32" data-id="32" data-stage="group" data-ts="1781924400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng D</span>
+    <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Levi's Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m32-home">
+      <span class="team-flag">🇹🇷</span>
+      <span class="team-name">Türkiye</span>
+    </div>
+    <div class="score-box" id="m32-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">13:00 AEST</div>
+    </div>
+    <div class="team" id="m32-away">
+      <span class="team-flag">🇵🇾</span>
+      <span class="team-name">Paraguay</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">CN 21/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m33" data-id="33" data-stage="group" data-ts="1781974800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng F</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m33-home">
+      <span class="team-flag">🇳🇱</span>
+      <span class="team-name">Netherlands</span>
+    </div>
+    <div class="score-box" id="m33-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m33-away">
+      <span class="team-flag">🇸🇪</span>
+      <span class="team-name">Sweden</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m34" data-id="34" data-stage="group" data-ts="1781985600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng E</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BMO Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m34-home">
+      <span class="team-flag">🇩🇪</span>
+      <span class="team-name">Germany</span>
+    </div>
+    <div class="score-box" id="m34-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m34-away">
+      <span class="team-flag">🇨🇮</span>
+      <span class="team-name">Ivory Coast</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m35" data-id="35" data-stage="group" data-ts="1782000000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng E</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Arrowhead Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m35-home">
+      <span class="team-flag">🇪🇨</span>
+      <span class="team-name">Ecuador</span>
+    </div>
+    <div class="score-box" id="m35-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m35-away">
+      <span class="team-flag">🇨🇼</span>
+      <span class="team-name">Curaçao</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m36" data-id="36" data-stage="group" data-ts="1782014400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng F</span>
+    <div class="card-time"><span class="time-val">14:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio BBVA</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m36-home">
+      <span class="team-flag">🇹🇳</span>
+      <span class="team-name">Tunisia</span>
+    </div>
+    <div class="score-box" id="m36-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">14:00 AEST</div>
+    </div>
+    <div class="team" id="m36-away">
+      <span class="team-flag">🇯🇵</span>
+      <span class="team-name">Japan</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T2 22/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m37" data-id="37" data-stage="group" data-ts="1782057600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng H</span>
+    <div class="card-time"><span class="time-val">02:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m37-home">
+      <span class="team-flag">🇪🇸</span>
+      <span class="team-name">Spain</span>
+    </div>
+    <div class="score-box" id="m37-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">02:00 AEST</div>
+    </div>
+    <div class="team" id="m37-away">
+      <span class="team-flag">🇸🇦</span>
+      <span class="team-name">Saudi Arabia</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m38" data-id="38" data-stage="group" data-ts="1782068400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng G</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m38-home">
+      <span class="team-flag">🇧🇪</span>
+      <span class="team-name">Belgium</span>
+    </div>
+    <div class="score-box" id="m38-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m38-away">
+      <span class="team-flag">🇮🇷</span>
+      <span class="team-name">Iran</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m39" data-id="39" data-stage="group" data-ts="1782079200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng H</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m39-home">
+      <span class="team-flag">🇺🇾</span>
+      <span class="team-name">Uruguay</span>
+    </div>
+    <div class="score-box" id="m39-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m39-away">
+      <span class="team-flag">🇨🇻</span>
+      <span class="team-name">Cape Verde</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m40" data-id="40" data-stage="group" data-ts="1782090000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng G</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m40-home">
+      <span class="team-flag">🇳🇿</span>
+      <span class="team-name">New Zealand</span>
+    </div>
+    <div class="score-box" id="m40-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m40-away">
+      <span class="team-flag">🇪🇬</span>
+      <span class="team-name">Egypt</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T3 23/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m41" data-id="41" data-stage="group" data-ts="1782147600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng J</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m41-home">
+      <span class="team-flag">🇦🇷</span>
+      <span class="team-name">Argentina</span>
+    </div>
+    <div class="score-box" id="m41-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m41-away">
+      <span class="team-flag">🇦🇹</span>
+      <span class="team-name">Austria</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m42" data-id="42" data-stage="group" data-ts="1782162000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng I</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lincoln Financial Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m42-home">
+      <span class="team-flag">🇫🇷</span>
+      <span class="team-name">France</span>
+    </div>
+    <div class="score-box" id="m42-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m42-away">
+      <span class="team-flag">🇮🇶</span>
+      <span class="team-name">Iraq</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m43" data-id="43" data-stage="group" data-ts="1782172800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng I</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m43-home">
+      <span class="team-flag">🇳🇴</span>
+      <span class="team-name">Norway</span>
+    </div>
+    <div class="score-box" id="m43-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m43-away">
+      <span class="team-flag">🇸🇳</span>
+      <span class="team-name">Senegal</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m44" data-id="44" data-stage="group" data-ts="1782183600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng J</span>
+    <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Levi's Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m44-home">
+      <span class="team-flag">🇯🇴</span>
+      <span class="team-name">Jordan</span>
+    </div>
+    <div class="score-box" id="m44-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">13:00 AEST</div>
+    </div>
+    <div class="team" id="m44-away">
+      <span class="team-flag">🇩🇿</span>
+      <span class="team-name">Algeria</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T4 24/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m45" data-id="45" data-stage="group" data-ts="1782234000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng K</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m45-home">
+      <span class="team-flag">🇵🇹</span>
+      <span class="team-name">Portugal</span>
+    </div>
+    <div class="score-box" id="m45-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m45-away">
+      <span class="team-flag">🇺🇿</span>
+      <span class="team-name">Uzbekistan</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m46" data-id="46" data-stage="group" data-ts="1782244800000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng L</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m46-home">
+      <span class="team-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+      <span class="team-name">England</span>
+    </div>
+    <div class="score-box" id="m46-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m46-away">
+      <span class="team-flag">🇬🇭</span>
+      <span class="team-name">Ghana</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m47" data-id="47" data-stage="group" data-ts="1782255600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng L</span>
+    <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BMO Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m47-home">
+      <span class="team-flag">🇵🇦</span>
+      <span class="team-name">Panama</span>
+    </div>
+    <div class="score-box" id="m47-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:00 AEST</div>
+    </div>
+    <div class="team" id="m47-away">
+      <span class="team-flag">🇭🇷</span>
+      <span class="team-name">Croatia</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m48" data-id="48" data-stage="group" data-ts="1782266400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng K</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Akron</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m48-home">
+      <span class="team-flag">🇨🇴</span>
+      <span class="team-name">Colombia</span>
+    </div>
+    <div class="score-box" id="m48-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m48-away">
+      <span class="team-flag">🇨🇩</span>
+      <span class="team-name">DR Congo</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T5 25/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m49" data-id="49" data-stage="group" data-ts="1782327600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng B</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m49-home">
+      <span class="team-flag">🇨🇭</span>
+      <span class="team-name">Switzerland</span>
+    </div>
+    <div class="score-box" id="m49-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m49-away">
+      <span class="team-flag">🇨🇦</span>
+      <span class="team-name">Canada</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m50" data-id="50" data-stage="group" data-ts="1782327600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng B</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lumen Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m50-home">
+      <span class="team-flag">🇧🇦</span>
+      <span class="team-name">Bosnia & Herzegovina</span>
+    </div>
+    <div class="score-box" id="m50-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m50-away">
+      <span class="team-flag">🇶🇦</span>
+      <span class="team-name">Qatar</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m51" data-id="51" data-stage="group" data-ts="1782338400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng C</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m51-home">
+      <span class="team-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+      <span class="team-name">Scotland</span>
+    </div>
+    <div class="score-box" id="m51-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m51-away">
+      <span class="team-flag">🇧🇷</span>
+      <span class="team-name">Brazil</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m52" data-id="52" data-stage="group" data-ts="1782338400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng C</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m52-home">
+      <span class="team-flag">🇲🇦</span>
+      <span class="team-name">Morocco</span>
+    </div>
+    <div class="score-box" id="m52-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m52-away">
+      <span class="team-flag">🇭🇹</span>
+      <span class="team-name">Haiti</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m53" data-id="53" data-stage="group" data-ts="1782349200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng A</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Azteca</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m53-home">
+      <span class="team-flag">🇨🇿</span>
+      <span class="team-name">Czechia</span>
+    </div>
+    <div class="score-box" id="m53-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m53-away">
+      <span class="team-flag">🇲🇽</span>
+      <span class="team-name">Mexico</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m54" data-id="54" data-stage="group" data-ts="1782349200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng A</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio BBVA</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m54-home">
+      <span class="team-flag">🇿🇦</span>
+      <span class="team-name">South Africa</span>
+    </div>
+    <div class="score-box" id="m54-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m54-away">
+      <span class="team-flag">🇰🇷</span>
+      <span class="team-name">South Korea</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T6 26/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m55" data-id="55" data-stage="group" data-ts="1782417600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng E</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lincoln Financial Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m55-home">
+      <span class="team-flag">🇨🇼</span>
+      <span class="team-name">Curaçao</span>
+    </div>
+    <div class="score-box" id="m55-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m55-away">
+      <span class="team-flag">🇨🇮</span>
+      <span class="team-name">Ivory Coast</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m56" data-id="56" data-stage="group" data-ts="1782417600000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng E</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m56-home">
+      <span class="team-flag">🇪🇨</span>
+      <span class="team-name">Ecuador</span>
+    </div>
+    <div class="score-box" id="m56-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m56-away">
+      <span class="team-flag">🇩🇪</span>
+      <span class="team-name">Germany</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m57" data-id="57" data-stage="group" data-ts="1782428400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng F</span>
+    <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m57-home">
+      <span class="team-flag">🇯🇵</span>
+      <span class="team-name">Japan</span>
+    </div>
+    <div class="score-box" id="m57-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:00 AEST</div>
+    </div>
+    <div class="team" id="m57-away">
+      <span class="team-flag">🇸🇪</span>
+      <span class="team-name">Sweden</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m58" data-id="58" data-stage="group" data-ts="1782428400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng F</span>
+    <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Arrowhead Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m58-home">
+      <span class="team-flag">🇹🇳</span>
+      <span class="team-name">Tunisia</span>
+    </div>
+    <div class="score-box" id="m58-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:00 AEST</div>
+    </div>
+    <div class="team" id="m58-away">
+      <span class="team-flag">🇳🇱</span>
+      <span class="team-name">Netherlands</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m59" data-id="59" data-stage="group" data-ts="1782439200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng D</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m59-home">
+      <span class="team-flag">🇹🇷</span>
+      <span class="team-name">Türkiye</span>
+    </div>
+    <div class="score-box" id="m59-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m59-away">
+      <span class="team-flag">🇺🇸</span>
+      <span class="team-name">USA</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m60" data-id="60" data-stage="group" data-ts="1782439200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng D</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Levi's Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m60-home">
+      <span class="team-flag">🇵🇾</span>
+      <span class="team-name">Paraguay</span>
+    </div>
+    <div class="score-box" id="m60-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m60-away">
+      <span class="team-flag">🇦🇺</span>
+      <span class="team-name">Australia</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">T7 27/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m61" data-id="61" data-stage="group" data-ts="1782500400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng I</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m61-home">
+      <span class="team-flag">🇳🇴</span>
+      <span class="team-name">Norway</span>
+    </div>
+    <div class="score-box" id="m61-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m61-away">
+      <span class="team-flag">🇫🇷</span>
+      <span class="team-name">France</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m62" data-id="62" data-stage="group" data-ts="1782500400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng I</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BMO Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m62-home">
+      <span class="team-flag">🇸🇳</span>
+      <span class="team-name">Senegal</span>
+    </div>
+    <div class="score-box" id="m62-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m62-away">
+      <span class="team-flag">🇮🇶</span>
+      <span class="team-name">Iraq</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m63" data-id="63" data-stage="group" data-ts="1782518400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng H</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m63-home">
+      <span class="team-flag">🇨🇻</span>
+      <span class="team-name">Cape Verde</span>
+    </div>
+    <div class="score-box" id="m63-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m63-away">
+      <span class="team-flag">🇸🇦</span>
+      <span class="team-name">Saudi Arabia</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m64" data-id="64" data-stage="group" data-ts="1782518400000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng H</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Akron</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m64-home">
+      <span class="team-flag">🇺🇾</span>
+      <span class="team-name">Uruguay</span>
+    </div>
+    <div class="score-box" id="m64-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m64-away">
+      <span class="team-flag">🇪🇸</span>
+      <span class="team-name">Spain</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m65" data-id="65" data-stage="group" data-ts="1782529200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng G</span>
+    <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lumen Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m65-home">
+      <span class="team-flag">🇪🇬</span>
+      <span class="team-name">Egypt</span>
+    </div>
+    <div class="score-box" id="m65-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">13:00 AEST</div>
+    </div>
+    <div class="team" id="m65-away">
+      <span class="team-flag">🇮🇷</span>
+      <span class="team-name">Iran</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m66" data-id="66" data-stage="group" data-ts="1782529200000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng G</span>
+    <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m66-home">
+      <span class="team-flag">🇳🇿</span>
+      <span class="team-name">New Zealand</span>
+    </div>
+    <div class="score-box" id="m66-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">13:00 AEST</div>
+    </div>
+    <div class="team" id="m66-away">
+      <span class="team-flag">🇧🇪</span>
+      <span class="team-name">Belgium</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="group">
+<div class="day-header">
+  <span class="day-date">CN 28/06</span>
+  <span class="stage-badge stage-group">Vòng bảng</span>
+</div>
+<div class="match-card" id="m67" data-id="67" data-stage="group" data-ts="1782594000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng L</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m67-home">
+      <span class="team-flag">🇵🇦</span>
+      <span class="team-name">Panama</span>
+    </div>
+    <div class="score-box" id="m67-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m67-away">
+      <span class="team-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+      <span class="team-name">England</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m68" data-id="68" data-stage="group" data-ts="1782594000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng L</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lincoln Financial Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m68-home">
+      <span class="team-flag">🇭🇷</span>
+      <span class="team-name">Croatia</span>
+    </div>
+    <div class="score-box" id="m68-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m68-away">
+      <span class="team-flag">🇬🇭</span>
+      <span class="team-name">Ghana</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m69" data-id="69" data-stage="group" data-ts="1782603000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng K</span>
+    <div class="card-time"><span class="time-val">09:30</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m69-home">
+      <span class="team-flag">🇨🇴</span>
+      <span class="team-name">Colombia</span>
+    </div>
+    <div class="score-box" id="m69-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:30 AEST</div>
+    </div>
+    <div class="team" id="m69-away">
+      <span class="team-flag">🇵🇹</span>
+      <span class="team-name">Portugal</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m70" data-id="70" data-stage="group" data-ts="1782603000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng K</span>
+    <div class="card-time"><span class="time-val">09:30</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m70-home">
+      <span class="team-flag">🇨🇩</span>
+      <span class="team-name">DR Congo</span>
+    </div>
+    <div class="score-box" id="m70-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:30 AEST</div>
+    </div>
+    <div class="team" id="m70-away">
+      <span class="team-flag">🇺🇿</span>
+      <span class="team-name">Uzbekistan</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m71" data-id="71" data-stage="group" data-ts="1782612000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng J</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Arrowhead Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m71-home">
+      <span class="team-flag">🇩🇿</span>
+      <span class="team-name">Algeria</span>
+    </div>
+    <div class="score-box" id="m71-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m71-away">
+      <span class="team-flag">🇦🇹</span>
+      <span class="team-name">Austria</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m72" data-id="72" data-stage="group" data-ts="1782612000000">
+  <div class="card-top">
+    <span class="match-group-tag">Bảng J</span>
+    <div class="card-time"><span class="time-val">12:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m72-home">
+      <span class="team-flag">🇯🇴</span>
+      <span class="team-name">Jordan</span>
+    </div>
+    <div class="score-box" id="m72-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">12:00 AEST</div>
+    </div>
+    <div class="team" id="m72-away">
+      <span class="team-flag">🇦🇷</span>
+      <span class="team-name">Argentina</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r32">
+<div class="day-header">
+  <span class="day-date">T2 29/06</span>
+  <span class="stage-badge stage-r32">Vòng 1/32</span>
+</div>
+<div class="match-card" id="m73" data-id="73" data-stage="r32" data-ts="1782673200000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 73</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m73-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up A</span>
+    </div>
+    <div class="score-box" id="m73-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m73-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up B</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r32">
+<div class="day-header">
+  <span class="day-date">T3 30/06</span>
+  <span class="stage-badge stage-r32">Vòng 1/32</span>
+</div>
+<div class="match-card" id="m74" data-id="74" data-stage="r32" data-ts="1782765000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 74</span>
+    <div class="card-time"><span class="time-val">06:30</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m74-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win E</span>
+    </div>
+    <div class="score-box" id="m74-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:30 AEST</div>
+    </div>
+    <div class="team" id="m74-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m75" data-id="75" data-stage="r32" data-ts="1782781200000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 75</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio BBVA</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m75-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win F</span>
+    </div>
+    <div class="score-box" id="m75-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m75-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up C</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m76" data-id="76" data-stage="r32" data-ts="1782752400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 76</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m76-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win C</span>
+    </div>
+    <div class="score-box" id="m76-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m76-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up F</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r32">
+<div class="day-header">
+  <span class="day-date">T4 01/07</span>
+  <span class="stage-badge stage-r32">Vòng 1/32</span>
+</div>
+<div class="match-card" id="m77" data-id="77" data-stage="r32" data-ts="1782853200000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 77</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m77-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win I</span>
+    </div>
+    <div class="score-box" id="m77-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m77-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m78" data-id="78" data-stage="r32" data-ts="1782838800000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 78</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m78-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up E</span>
+    </div>
+    <div class="score-box" id="m78-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m78-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up I</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m79" data-id="79" data-stage="r32" data-ts="1782867600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 79</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Azteca</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m79-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win A</span>
+    </div>
+    <div class="score-box" id="m79-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m79-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r32">
+<div class="day-header">
+  <span class="day-date">T5 02/07</span>
+  <span class="stage-badge stage-r32">Vòng 1/32</span>
+</div>
+<div class="match-card" id="m80" data-id="80" data-stage="r32" data-ts="1782921600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 80</span>
+    <div class="card-time"><span class="time-val">02:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m80-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win L</span>
+    </div>
+    <div class="score-box" id="m80-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">02:00 AEST</div>
+    </div>
+    <div class="team" id="m80-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m81" data-id="81" data-stage="r32" data-ts="1782950400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 81</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Levi's Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m81-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win D</span>
+    </div>
+    <div class="score-box" id="m81-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m81-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m82" data-id="82" data-stage="r32" data-ts="1782936000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 82</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lumen Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m82-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win G</span>
+    </div>
+    <div class="score-box" id="m82-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m82-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r32">
+<div class="day-header">
+  <span class="day-date">T6 03/07</span>
+  <span class="stage-badge stage-r32">Vòng 1/32</span>
+</div>
+<div class="match-card" id="m83" data-id="83" data-stage="r32" data-ts="1783033200000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 83</span>
+    <div class="card-time"><span class="time-val">09:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BMO Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m83-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up K</span>
+    </div>
+    <div class="score-box" id="m83-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">09:00 AEST</div>
+    </div>
+    <div class="team" id="m83-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up L</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m84" data-id="84" data-stage="r32" data-ts="1783018800000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 84</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m84-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win H</span>
+    </div>
+    <div class="score-box" id="m84-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m84-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up J</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m85" data-id="85" data-stage="r32" data-ts="1783047600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 85</span>
+    <div class="card-time"><span class="time-val">13:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m85-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win B</span>
+    </div>
+    <div class="score-box" id="m85-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">13:00 AEST</div>
+    </div>
+    <div class="team" id="m85-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r32">
+<div class="day-header">
+  <span class="day-date">T7 04/07</span>
+  <span class="stage-badge stage-r32">Vòng 1/32</span>
+</div>
+<div class="match-card" id="m86" data-id="86" data-stage="r32" data-ts="1783116000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 86</span>
+    <div class="card-time"><span class="time-val">08:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m86-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win J</span>
+    </div>
+    <div class="score-box" id="m86-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">08:00 AEST</div>
+    </div>
+    <div class="team" id="m86-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up H</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m87" data-id="87" data-stage="r32" data-ts="1783128600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 87</span>
+    <div class="card-time"><span class="time-val">11:30</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Arrowhead Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m87-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win K</span>
+    </div>
+    <div class="score-box" id="m87-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:30 AEST</div>
+    </div>
+    <div class="team" id="m87-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Best 3rd</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m88" data-id="88" data-stage="r32" data-ts="1783101600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 88</span>
+    <div class="card-time"><span class="time-val">04:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m88-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up D</span>
+    </div>
+    <div class="score-box" id="m88-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">04:00 AEST</div>
+    </div>
+    <div class="team" id="m88-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">R-up G</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r16">
+<div class="day-header">
+  <span class="day-date">CN 05/07</span>
+  <span class="stage-badge stage-r16">Vòng 1/16</span>
+</div>
+<div class="match-card" id="m89" data-id="89" data-stage="r16" data-ts="1783198800000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 89</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lincoln Financial Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m89-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 74</span>
+    </div>
+    <div class="score-box" id="m89-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m89-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 77</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m90" data-id="90" data-stage="r16" data-ts="1783184400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 90</span>
+    <div class="card-time"><span class="time-val">03:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">NRG Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m90-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 73</span>
+    </div>
+    <div class="score-box" id="m90-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">03:00 AEST</div>
+    </div>
+    <div class="team" id="m90-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 75</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r16">
+<div class="day-header">
+  <span class="day-date">T2 06/07</span>
+  <span class="stage-badge stage-r16">Vòng 1/16</span>
+</div>
+<div class="match-card" id="m91" data-id="91" data-stage="r16" data-ts="1783281600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 91</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m91-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 76</span>
+    </div>
+    <div class="score-box" id="m91-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m91-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 78</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m92" data-id="92" data-stage="r16" data-ts="1783296000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 92</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Estadio Azteca</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m92-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 79</span>
+    </div>
+    <div class="score-box" id="m92-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m92-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 80</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r16">
+<div class="day-header">
+  <span class="day-date">T3 07/07</span>
+  <span class="stage-badge stage-r16">Vòng 1/16</span>
+</div>
+<div class="match-card" id="m93" data-id="93" data-stage="r16" data-ts="1783364400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 93</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m93-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 83</span>
+    </div>
+    <div class="score-box" id="m93-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m93-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 84</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m94" data-id="94" data-stage="r16" data-ts="1783382400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 94</span>
+    <div class="card-time"><span class="time-val">10:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Lumen Field</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m94-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 81</span>
+    </div>
+    <div class="score-box" id="m94-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">10:00 AEST</div>
+    </div>
+    <div class="team" id="m94-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 82</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="r16">
+<div class="day-header">
+  <span class="day-date">T4 08/07</span>
+  <span class="stage-badge stage-r16">Vòng 1/16</span>
+</div>
+<div class="match-card" id="m95" data-id="95" data-stage="r16" data-ts="1783440000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 95</span>
+    <div class="card-time"><span class="time-val">02:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m95-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 86</span>
+    </div>
+    <div class="score-box" id="m95-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">02:00 AEST</div>
+    </div>
+    <div class="team" id="m95-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 88</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m96" data-id="96" data-stage="r16" data-ts="1783454400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 96</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">BC Place</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m96-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 85</span>
+    </div>
+    <div class="score-box" id="m96-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m96-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 87</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="qf">
+<div class="day-header">
+  <span class="day-date">T6 10/07</span>
+  <span class="stage-badge stage-qf">Tứ kết</span>
+</div>
+<div class="match-card" id="m97" data-id="97" data-stage="qf" data-ts="1783627200000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 97</span>
+    <div class="card-time"><span class="time-val">06:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Gillette Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m97-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 89</span>
+    </div>
+    <div class="score-box" id="m97-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">06:00 AEST</div>
+    </div>
+    <div class="team" id="m97-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 90</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="qf">
+<div class="day-header">
+  <span class="day-date">T7 11/07</span>
+  <span class="stage-badge stage-qf">Tứ kết</span>
+</div>
+<div class="match-card" id="m98" data-id="98" data-stage="qf" data-ts="1783710000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 98</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">SoFi Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m98-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 93</span>
+    </div>
+    <div class="score-box" id="m98-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m98-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 94</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="qf">
+<div class="day-header">
+  <span class="day-date">CN 12/07</span>
+  <span class="stage-badge stage-qf">Tứ kết</span>
+</div>
+<div class="match-card" id="m99" data-id="99" data-stage="qf" data-ts="1783803600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 99</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m99-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 91</span>
+    </div>
+    <div class="score-box" id="m99-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m99-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 92</span>
+    </div>
+  </div>
+</div><div class="match-card" id="m100" data-id="100" data-stage="qf" data-ts="1783818000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 100</span>
+    <div class="card-time"><span class="time-val">11:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Arrowhead Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m100-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 95</span>
+    </div>
+    <div class="score-box" id="m100-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">11:00 AEST</div>
+    </div>
+    <div class="team" id="m100-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 96</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="sf">
+<div class="day-header">
+  <span class="day-date">T4 15/07</span>
+  <span class="stage-badge stage-sf">Bán kết</span>
+</div>
+<div class="match-card" id="m101" data-id="101" data-stage="sf" data-ts="1784055600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 101</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">AT&T Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m101-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 97</span>
+    </div>
+    <div class="score-box" id="m101-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m101-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 98</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="sf">
+<div class="day-header">
+  <span class="day-date">T5 16/07</span>
+  <span class="stage-badge stage-sf">Bán kết</span>
+</div>
+<div class="match-card" id="m102" data-id="102" data-stage="sf" data-ts="1784142000000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 102</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Mercedes-Benz Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m102-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 99</span>
+    </div>
+    <div class="score-box" id="m102-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m102-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 100</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="3p">
+<div class="day-header">
+  <span class="day-date">CN 19/07</span>
+  <span class="stage-badge stage-3p">Hạng ba</span>
+</div>
+<div class="match-card" id="m103" data-id="103" data-stage="3p" data-ts="1784408400000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 103</span>
+    <div class="card-time"><span class="time-val">07:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">Hard Rock Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m103-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Lose 101</span>
+    </div>
+    <div class="score-box" id="m103-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">07:00 AEST</div>
+    </div>
+    <div class="team" id="m103-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Lose 102</span>
+    </div>
+  </div>
+</div>
+</div>
+<div class="day-section" data-stage="final">
+<div class="day-header">
+  <span class="day-date">T2 20/07</span>
+  <span class="stage-badge stage-f">🏆 Chung kết</span>
+</div>
+<div class="match-card" id="m104" data-id="104" data-stage="final" data-ts="1784487600000">
+  <div class="card-top">
+    <span class="match-group-tag">TĐ 104</span>
+    <div class="card-time"><span class="time-val">05:00</span><span class="live-badge">🟢 LIVE</span></div>
+    <div class="venue-tip">MetLife Stadium</div>
+  </div>
+  <div class="card-match">
+    <div class="team" id="m104-home">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 101</span>
+    </div>
+    <div class="score-box" id="m104-score">
+      <div class="score-display no-score">vs</div>
+      <div class="score-sub">05:00 AEST</div>
+    </div>
+    <div class="team" id="m104-away">
+      <span class="team-flag">🏳️</span>
+      <span class="team-name">Win 102</span>
+    </div>
+  </div>
+</div>
+</div>  </div>
+</div>
+
+<script>
+// ── STORAGE (update scores into pre-rendered HTML) ──
+const STORAGE_KEY = 'wc2026_v4';
+
+const FLAGS = {
+  'Mexico':'🇲🇽','South Africa':'🇿🇦','South Korea':'🇰🇷','Czechia':'🇨🇿',
+  'Canada':'🇨🇦','Bosnia & Herzegovina':'🇧🇦','USA':'🇺🇸','Paraguay':'🇵🇾',
+  'Qatar':'🇶🇦','Switzerland':'🇨🇭','Brazil':'🇧🇷','Morocco':'🇲🇦',
+  'Haiti':'🇭🇹','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Australia':'🇦🇺','Türkiye':'🇹🇷',
+  'Germany':'🇩🇪','Curaçao':'🇨🇼','Netherlands':'🇳🇱','Japan':'🇯🇵',
+  'Ivory Coast':'🇨🇮','Ecuador':'🇪🇨','Sweden':'🇸🇪','Tunisia':'🇹🇳',
+  'Spain':'🇪🇸','Cape Verde':'🇨🇻','Belgium':'🇧🇪','Egypt':'🇪🇬',
+  'Saudi Arabia':'🇸🇦','Uruguay':'🇺🇾','Iran':'🇮🇷','New Zealand':'🇳🇿',
+  'France':'🇫🇷','Senegal':'🇸🇳','Iraq':'🇮🇶','Norway':'🇳🇴',
+  'Argentina':'🇦🇷','Algeria':'🇩🇿','Austria':'🇦🇹','Jordan':'🇯🇴',
+  'Portugal':'🇵🇹','DR Congo':'🇨🇩','England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croatia':'🇭🇷',
+  'Ghana':'🇬🇭','Panama':'🇵🇦','Uzbekistan':'🇺🇿','Colombia':'🇨🇴'
+};
+function getFlag(t) {
+  for (const [k,v] of Object.entries(FLAGS)) if (t && t.includes(k)) return v;
+  return '🏳️';
+}
+
+// Apply a saved result to the DOM for one match
+function applyResult(id, scoreHome, scoreAway, penalty, status, homeActual, awayActual) {
+  const card = document.getElementById('m'+id);
+  if (!card) return;
+
+  // Update team names if actual teams known
+  if (homeActual) {
+    const el = document.querySelector('#m'+id+'-home .team-name');
+    const fl = document.querySelector('#m'+id+'-home .team-flag');
+    if (el) el.textContent = homeActual;
+    if (fl) fl.textContent = getFlag(homeActual);
+  }
+  if (awayActual) {
+    const el = document.querySelector('#m'+id+'-away .team-name');
+    const fl = document.querySelector('#m'+id+'-away .team-flag');
+    if (el) el.textContent = awayActual;
+    if (fl) fl.textContent = getFlag(awayActual);
+  }
+
+  // Update score box
+  const box = document.getElementById('m'+id+'-score');
+  if (box && scoreHome !== null && scoreHome !== undefined) {
+    const pen = penalty ? `<div class="score-penalty">Pen: ${penalty}</div>` : '';
+    box.innerHTML = `<div class="score-display">${scoreHome}–${scoreAway}</div>${pen}<div class="score-sub">KT</div>`;
+  }
+
+  // Card state classes
+  card.classList.remove('has-result','live-now');
+  if (status === 'live') {
+    card.classList.add('live-now');
+  } else if (scoreHome !== null && scoreHome !== undefined) {
+    card.classList.add('has-result');
+    // Winner/loser classes on teams
+    const homeDiv = document.getElementById('m'+id+'-home');
+    const awayDiv = document.getElementById('m'+id+'-away');
+    if (homeDiv && awayDiv) {
+      homeDiv.classList.remove('winner','loser');
+      awayDiv.classList.remove('winner','loser');
+      if (scoreHome > scoreAway) { homeDiv.classList.add('winner'); awayDiv.classList.add('loser'); }
+      else if (scoreAway > scoreHome) { awayDiv.classList.add('winner'); homeDiv.classList.add('loser'); }
+    }
+  }
+}
+
+// Load & apply saved scores
+function loadScores() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    for (const [id, d] of Object.entries(saved)) {
+      applyResult(parseInt(id), d.scoreHome, d.scoreAway, d.penalty, d.status, d.homeActual, d.awayActual);
+    }
+  } catch(e) {}
+}
+
+function saveScore(id, scoreHome, scoreAway, penalty, status, homeActual, awayActual) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    saved[id] = { scoreHome, scoreAway, penalty, status, homeActual, awayActual };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  } catch(e) {}
+}
+
+// ── FILTER (show/hide existing DOM sections) ──
+let currentFilter = 'all';
+
+function filterStage(stage, btn) {
+  currentFilter = stage;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const nowTs = Date.now();
+  // Brisbane "today" date string
+  const nowBne = new Date(nowTs + 10*3600*1000); // rough Brisbane
+  const todayD = String(nowBne.getUTCDate()).padStart(2,'0');
+  const todayM = String(nowBne.getUTCMonth()+1).padStart(2,'0');
+  const todayStr = todayD+'/'+todayM;
+
+  let anyVisible = false;
+  document.querySelectorAll('.day-section').forEach(section => {
+    const sStage = section.dataset.stage;
+    const dayDate = section.querySelector('.day-date').textContent;
+    let show = false;
+    if (stage === 'all') show = true;
+    else if (stage === 'today') show = dayDate.includes(todayStr);
+    else if (stage === 'final') show = sStage === 'final' || sStage === '3p';
+    else show = sStage === stage;
+    section.classList.toggle('hidden', !show);
+    if (show) anyVisible = true;
+  });
+
+  document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
+
+  if (stage === 'today') {
+    const first = document.querySelector('.day-section:not(.hidden)');
+    if (first) setTimeout(()=>first.scrollIntoView({behavior:'smooth',block:'start'}), 80);
+  }
+}
+
+// ── AI SCORE UPDATE ──
+async function updateScores() {
+  const btn = document.getElementById('btn-update');
+  const bar = document.getElementById('status-bar');
+  btn.disabled = true; btn.classList.add('loading');
+  bar.className = 'show'; bar.textContent = '⏳ Đang tìm kết quả World Cup 2026...';
+
+  // Build list of matches that might have scores
+  const nowTs = Date.now();
+  const cards = document.querySelectorAll('.match-card');
+  const past = [];
+  cards.forEach(c => {
+    const ts = parseInt(c.dataset.ts || '0');
+    if (ts <= nowTs) {
+      const id = c.dataset.id;
+      const homeName = c.querySelector('.team-name') ? c.querySelector('.team-name').textContent : '';
+      const awayName = c.querySelectorAll('.team-name')[1] ? c.querySelectorAll('.team-name')[1].textContent : '';
+      const hasScore = c.classList.contains('has-result');
+      const scoreEl = c.querySelector('.score-display:not(.no-score)');
+      const scoreStr = hasScore && scoreEl ? `(đã có: ${scoreEl.textContent})` : '(chưa có)';
+      const timeEl = c.querySelector('.time-val');
+      const timeStr = timeEl ? timeEl.textContent : '';
+      const dayEl = c.closest('.day-section')?.querySelector('.day-date');
+      const dayStr = dayEl ? dayEl.textContent : '';
+      past.push(`ID ${id}: ${homeName} vs ${awayName} — ${dayStr} ${timeStr} AEST ${scoreStr}`);
+    }
+  });
+
+  if (!past.length) {
+    bar.className='show'; bar.textContent='ℹ️ Chưa có trận nào diễn ra.';
+    btn.disabled=false; btn.classList.remove('loading');
+    setTimeout(()=>bar.className='',5000); return;
+  }
+
+  const nowBne = new Date(nowTs);
+  const prompt = `Bạn là chuyên gia kết quả FIFA World Cup 2026. Hôm nay: ${nowBne.toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})} (Brisbane AEST UTC+10).
+
+Các trận cần kiểm tra (tối đa 30 gần nhất):
+${past.slice(-30).join('\n')}
+
+Trả về JSON thuần (KHÔNG markdown, KHÔNG giải thích gì thêm):
+{"updated":[{"id":<số>,"homeActual":"<tên thực hoặc null>","awayActual":"<tên thực hoặc null>","scoreHome":<số hoặc null>,"scoreAway":<số hoặc null>,"penalty":"<'4-2' hoặc null>","status":"finished|live|upcoming"}],"note":"<ghi chú ngắn tiếng Việt>"}
+
+Chỉ gồm trận có kết quả mới hoặc đang live.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const text = (data.content||[]).map(c=>c.text||'').join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(clean);
+
+    let count = 0;
+    for (const u of (result.updated||[])) {
+      if (u.scoreHome !== null && u.scoreHome !== undefined) {
+        applyResult(u.id, u.scoreHome, u.scoreAway, u.penalty||null, u.status||'finished', u.homeActual, u.awayActual);
+        saveScore(u.id, u.scoreHome, u.scoreAway, u.penalty||null, u.status||'finished', u.homeActual, u.awayActual);
+        count++;
+      } else if (u.status === 'live') {
+        applyResult(u.id, null, null, null, 'live', u.homeActual, u.awayActual);
+      } else if (u.homeActual || u.awayActual) {
+        applyResult(u.id, null, null, null, 'upcoming', u.homeActual, u.awayActual);
+        saveScore(u.id, null, null, null, 'upcoming', u.homeActual, u.awayActual);
+      }
+    }
+    bar.className='show ok';
+    bar.textContent=`✅ Cập nhật ${count} trận. ${result.note||''}`;
+    document.getElementById('last-updated').textContent='Lúc '+new Date().toLocaleTimeString('vi-VN');
+  } catch(err) {
+    bar.className='show err';
+    bar.textContent='❌ Lỗi: '+err.message;
+  } finally {
+    btn.disabled=false; btn.classList.remove('loading');
+  }
+  setTimeout(()=>bar.className='',8000);
+}
+
+// ── INIT ──
+loadScores();
+
+// Scroll to today on load
+(function scrollToToday(){
+  const nowBne = new Date(Date.now() + 10*3600*1000);
+  const d = String(nowBne.getUTCDate()).padStart(2,'0');
+  const m = String(nowBne.getUTCMonth()+1).padStart(2,'0');
+  const key = d+'/'+m;
+  const sections = document.querySelectorAll('.day-section');
+  for (const s of sections) {
+    const h = s.querySelector('.day-date');
+    if (h && h.textContent.includes(key)) {
+      setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'start'}),300);
+      break;
+    }
+  }
+})();
+</script>
+</body>
+</html>
