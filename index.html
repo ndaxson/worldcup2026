@@ -83,6 +83,9 @@ body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font
 .odds-lose{background:#3a1a1a;color:#f87171;border:1px solid #4a1e1e}
 .odds-hcap{background:#1a2d4a;color:#60a5fa;border:1px solid #1e3a5c}
 .odds-note{font-size:10px;color:var(--dim);margin-top:3px;font-style:italic}
+.odds-title{font-size:10px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.odds-team{font-size:11px;opacity:.85;margin-right:3px}
+.odds-val{font-size:13px;font-weight:900}
 .btn-odds{background:linear-gradient(135deg,#1a3a5c,#0f2a42);color:#60a5fa;border:1px solid #1e3a5c;padding:8px 14px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;min-height:40px;letter-spacing:.3px;white-space:nowrap}
 .btn-odds:active{opacity:.75}
 .btn-odds:disabled{opacity:.45}
@@ -2796,38 +2799,39 @@ function applyOdds(id, home1x2, draw1x2, away1x2, homeHcap, hcapLine, awayHcap, 
   if (!box) return;
   if (!home1x2 && !homeHcap) { box.className = 'card-odds'; box.innerHTML = ''; return; }
 
-  let html = '';
+  const homeTeam = document.querySelector('#m'+id+'-home .team-name');
+  const awayTeam = document.querySelector('#m'+id+'-away .team-name');
+  const hName = homeTeam ? homeTeam.textContent : 'Home';
+  const aName = awayTeam ? awayTeam.textContent : 'Away';
+
+  let html = '<div class="odds-title">📊 Tỉ lệ kèo</div>';
 
   // 1X2 row
   if (home1x2 || draw1x2 || away1x2) {
-    const homeTeam = document.querySelector('#m'+id+'-home .team-name');
-    const awayTeam = document.querySelector('#m'+id+'-away .team-name');
-    const hName = homeTeam ? homeTeam.textContent : '1';
-    const aName = awayTeam ? awayTeam.textContent : '2';
     html += `<div class="odds-row">
       <span class="odds-label">1X2</span>
       <div class="odds-items">
-        ${home1x2 ? `<span class="odds-chip odds-win" title="${hName}">${hName.substring(0,3)} ${home1x2}</span>` : ''}
-        ${draw1x2 ? `<span class="odds-chip odds-draw">Hoà ${draw1x2}</span>` : ''}
-        ${away1x2 ? `<span class="odds-chip odds-lose" title="${aName}">${aName.substring(0,3)} ${away1x2}</span>` : ''}
+        ${home1x2 ? `<span class="odds-chip odds-win"><span class="odds-team">${hName}</span><span class="odds-val">${home1x2}</span></span>` : ''}
+        ${draw1x2 ? `<span class="odds-chip odds-draw"><span class="odds-team">Hoà</span><span class="odds-val">${draw1x2}</span></span>` : ''}
+        ${away1x2 ? `<span class="odds-chip odds-lose"><span class="odds-team">${aName}</span><span class="odds-val">${away1x2}</span></span>` : ''}
       </div>
     </div>`;
   }
 
   // Handicap row
   if (homeHcap || awayHcap) {
-    const hLine = hcapLine || '';
+    const hLine = hcapLine || '0';
     html += `<div class="odds-row">
       <span class="odds-label">Châu Á</span>
       <div class="odds-items">
-        ${homeHcap ? `<span class="odds-chip odds-hcap">${hLine} ${homeHcap}</span>` : ''}
-        ${awayHcap ? `<span class="odds-chip odds-hcap">${awayHcap}</span>` : ''}
+        ${homeHcap ? `<span class="odds-chip odds-hcap"><span class="odds-team">${hName} ${hLine}</span><span class="odds-val">${homeHcap}</span></span>` : ''}
+        ${awayHcap ? `<span class="odds-chip odds-hcap"><span class="odds-team">${aName}</span><span class="odds-val">${awayHcap}</span></span>` : ''}
       </div>
     </div>`;
   }
 
   if (note) {
-    html += `<div class="odds-note">* ${note}</div>`;
+    html += `<div class="odds-note">⚠️ ${note}</div>`;
   }
 
   box.innerHTML = html;
@@ -2919,22 +2923,3 @@ Return ONLY the JSON. No markdown. No backticks. No explanation.`;
 // ── INIT ──
 loadScores();
 loadOdds();
-
-// Scroll to today on load
-(function scrollToToday(){
-  const nowBne = new Date(Date.now() + 10*3600*1000);
-  const d = String(nowBne.getUTCDate()).padStart(2,'0');
-  const m = String(nowBne.getUTCMonth()+1).padStart(2,'0');
-  const key = d+'/'+m;
-  const sections = document.querySelectorAll('.day-section');
-  for (const s of sections) {
-    const h = s.querySelector('.day-date');
-    if (h && h.textContent.includes(key)) {
-      setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'start'}),300);
-      break;
-    }
-  }
-})();
-</script>
-</body>
-</html>
