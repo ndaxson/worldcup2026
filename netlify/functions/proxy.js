@@ -14,14 +14,17 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
   try {
+    const body = JSON.parse(event.body);
+    body.tools = [{ type: "web_search_20250305", name: "web_search" }];
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'web-search-2025-03-05'
       },
-      body: event.body
+      body: JSON.stringify(body)
     });
     const text = await response.text();
     return {
