@@ -2619,88 +2619,76 @@ function filterStage(stage, btn) {
   }
 }
 
-// ── AI SCORE UPDATE ──
+// ── SCORE UPDATE via football-data.org (FREE) ──
+const FOOTBALL_API_KEY = '1e1731e110744754a364c5afd5cdfa56';
+const WC_COMPETITION_ID = 2000; // FIFA World Cup
+
 async function updateScores() {
   const btn = document.getElementById('btn-update');
   const bar = document.getElementById('status-bar');
   btn.disabled = true; btn.classList.add('loading');
-  bar.className = 'show'; bar.textContent = '⏳ Đang tìm kết quả World Cup 2026...';
-
-  // Build list of matches that might have scores
-  const nowTs = Date.now();
-  const cards = document.querySelectorAll('.match-card');
-  const past = [];
-  cards.forEach(c => {
-    const ts = parseInt(c.dataset.ts || '0');
-    if (ts <= nowTs) {
-      const id = c.dataset.id;
-      const homeName = c.querySelector('.team-name') ? c.querySelector('.team-name').textContent : '';
-      const awayName = c.querySelectorAll('.team-name')[1] ? c.querySelectorAll('.team-name')[1].textContent : '';
-      const hasScore = c.classList.contains('has-result');
-      const scoreEl = c.querySelector('.score-display:not(.no-score)');
-      const scoreStr = hasScore && scoreEl ? `(đã có: ${scoreEl.textContent})` : '(chưa có)';
-      const timeEl = c.querySelector('.time-val');
-      const timeStr = timeEl ? timeEl.textContent : '';
-      const dayEl = c.closest('.day-section')?.querySelector('.day-date');
-      const dayStr = dayEl ? dayEl.textContent : '';
-      past.push(`ID ${id}: ${homeName} vs ${awayName} — ${dayStr} ${timeStr} AEST ${scoreStr}`);
-    }
-  });
-
-  if (!past.length) {
-    bar.className='show'; bar.textContent='ℹ️ Chưa có trận nào diễn ra.';
-    btn.disabled=false; btn.classList.remove('loading');
-    setTimeout(()=>bar.className='',5000); return;
-  }
-
-  const nowBne = new Date(nowTs);
-  const prompt = `Bạn là chuyên gia kết quả FIFA World Cup 2026. Hôm nay: ${nowBne.toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})} (Brisbane AEST UTC+10).
-
-Các trận cần kiểm tra (tối đa 30 gần nhất):
-${past.slice(-30).join('\n')}
-
-Trả về JSON thuần (KHÔNG markdown, KHÔNG giải thích gì thêm):
-{"updated":[{"id":<số>,"homeActual":"<tên thực hoặc null>","awayActual":"<tên thực hoặc null>","scoreHome":<số hoặc null>,"scoreAway":<số hoặc null>,"penalty":"<'4-2' hoặc null>","status":"finished|live|upcoming"}],"note":"<ghi chú ngắn tiếng Việt>"}
-
-Chỉ gồm trận có kết quả mới hoặc đang live.`;
+  bar.className = 'show'; bar.textContent = '⏳ Đang lấy kết quả từ football-data.org...';
 
   try {
-    const res = await fetch('/.netlify/functions/proxy',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1500,
-        messages:[{role:'user',content:prompt}]})
+    // Fetch all WC 2026 matches via Netlify proxy
+    const res = await fetch('/.netlify/functions/scores', {
+      method: 'GET',
+      headers: { 'X-Auth-Token': FOOTBALL_API_KEY }
     });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    const text = (data.content||[]).map(c=>c.text||'').join('');
-    const clean = text.replace(/```json|```/g,'').trim();
-    const result = JSON.parse(clean);
+    const matches = data.matches || [];
 
     let count = 0;
-    for (const u of (result.updated||[])) {
-      if (u.scoreHome !== null && u.scoreHome !== undefined) {
-        applyResult(u.id, u.scoreHome, u.scoreAway, u.penalty||null, u.status||'finished', u.homeActual, u.awayActual);
-        saveScore(u.id, u.scoreHome, u.scoreAway, u.penalty||null, u.status||'finished', u.homeActual, u.awayActual);
-        count++;
-      } else if (u.status === 'live') {
-        applyResult(u.id, null, null, null, 'live', u.homeActual, u.awayActual);
-      } else if (u.homeActual || u.awayActual) {
-        applyResult(u.id, null, null, null, 'upcoming', u.homeActual, u.awayActual);
-        saveScore(u.id, null, null, null, 'upcoming', u.homeActual, u.awayActual);
+    for (const m of matches) {
+      if (m.status !== 'FINISHED' && m.status !== 'IN_PLAY' && m.status !== 'PAUSED') continue;
+
+      // Find matching card by team names
+      const home = m.homeTeam?.name || '';
+      const away = m.awayTeam?.name || '';
+      const scoreHome = m.score?.fullTime?.home;
+      const scoreAway = m.score?.fullTime?.away;
+      const status = m.status === 'FINISHED' ? 'finished' : 'live';
+
+      // Match by team name in DOM
+      const cards = document.querySelectorAll('.match-card');
+      for (const card of cards) {
+        const homeEl = card.querySelector('[id$="-home"] .team-name');
+        const awayEl = card.querySelector('[id$="-away"] .team-name');
+        if (!homeEl || !awayEl) continue;
+        const cardHome = homeEl.textContent.trim().toUpperCase();
+        const cardAway = awayEl.textContent.trim().toUpperCase();
+        const apiHome = home.toUpperCase();
+        const apiAway = away.toUpperCase();
+        // Fuzzy match - check if names overlap
+        if ((cardHome.includes(apiHome.split(' ')[0]) || apiHome.includes(cardHome.split(' ')[0])) &&
+            (cardAway.includes(apiAway.split(' ')[0]) || apiAway.includes(cardAway.split(' ')[0]))) {
+          const id = parseInt(card.dataset.id);
+          if (scoreHome !== null && scoreHome !== undefined) {
+            applyResult(id, scoreHome, scoreAway, null, status, null, null);
+            saveScore(id, scoreHome, scoreAway, null, status, null, null);
+            count++;
+          } else if (status === 'live') {
+            applyResult(id, null, null, null, 'live', null, null);
+          }
+          break;
+        }
       }
     }
-    bar.className='show ok';
-    bar.textContent=`✅ Cập nhật ${count} trận. ${result.note||''}`;
-    document.getElementById('last-updated').textContent='Lúc '+new Date().toLocaleTimeString('vi-VN');
-  } catch(err) {
-    bar.className='show err';
-    bar.textContent='❌ Lỗi: '+err.message;
-  } finally {
-    btn.disabled=false; btn.classList.remove('loading');
-  }
-  setTimeout(()=>bar.className='',8000);
-}
 
+    bar.className = 'show ok';
+    bar.textContent = `✅ Cập nhật ${count} trận có kết quả.`;
+    document.getElementById('last-updated').textContent = 'Lúc ' + new Date().toLocaleTimeString('vi-VN');
+
+  } catch(err) {
+    bar.className = 'show err';
+    bar.textContent = '❌ Lỗi: ' + err.message;
+  } finally {
+    btn.disabled = false; btn.classList.remove('loading');
+  }
+  setTimeout(() => bar.className = '', 8000);
+}
 
 // ── ODDS STORAGE ──
 const ODDS_KEY = 'wc2026_odds_v1';
