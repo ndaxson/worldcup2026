@@ -2578,7 +2578,12 @@ function loadScores() {
 function saveScore(id, scoreHome, scoreAway, penalty, status, homeActual, awayActual) {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    saved[id] = { scoreHome, scoreAway, penalty, status, homeActual, awayActual };
+    // Only update if we have a real score, or if no existing score
+    if (scoreHome !== null && scoreHome !== undefined) {
+      saved[id] = { scoreHome, scoreAway, penalty, status, homeActual, awayActual };
+    } else if (!saved[id]) {
+      saved[id] = { scoreHome, scoreAway, penalty, status, homeActual, awayActual };
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
   } catch(e) {}
 }
